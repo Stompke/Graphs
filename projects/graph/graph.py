@@ -81,7 +81,33 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        # pass
+        # visited = set()
+        all_things = ""
+
+        def dft_recursive_inner(starting_point, visited):
+        
+            if starting_point in visited:
+                print('1st', visited)
+                print('1st', starting_point)
+                return starting_point
+            
+            if self.get_neighbors(starting_point) == set():
+                print('2nd', visited)
+                print('2nd', starting_point)
+                visited.add(starting_point)
+                return starting_point
+            
+            for neighbor in self.get_neighbors(starting_point):
+                visited.add(starting_point)
+                print('3rd', visited)
+                print('3rd', starting_point)
+                print('neighbor', neighbor)
+                # all_things.append(visited)
+                return dft_recursive_inner(neighbor, visited)
+
+        return dft_recursive_inner(starting_vertex, set())
+        
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -89,7 +115,23 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        q = Queue()
+        q.enqueue(starting_vertex)
+        visited = set()
+        routes = {}
+        while q.size() > 0:
+            v = q.dequeue()
+            
+            if v not in visited:
+                if v == destination_vertex:
+                    return routes
+                visited.add(v)
+                print(v)
+                neighbors = set()
+                for next_vert in self.get_neighbors(v):
+                    q.enqueue(next_vert)
+                    neighbors.add(next_vert)
+                routes[v] = neighbors
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -129,13 +171,18 @@ if __name__ == '__main__':
     graph.add_edge(3, 5)
     graph.add_edge(2, 3)
     graph.add_edge(4, 6)
+    graph.add_edge(4, 6)
+
 
     '''
     Should print:
         {1: {2}, 2: {3, 4}, 3: {5}, 4: {6, 7}, 5: {3}, 6: {3}, 7: {1, 6}}
     '''
     print(graph.vertices)
-    print(graph.get_neighbors(2))
+    graph.add_vertex(222)
+    print(graph.get_neighbors(222))
+    if(graph.get_neighbors(222) == set()):
+        print('it is equal YO')
 
     '''
     Valid BFT paths:
@@ -162,18 +209,18 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     graph.dft(1)
-    graph.dft_recursive(1)
+    print('dft_recursive', graph.dft_recursive(1))
 
     '''
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    print('breadth first search: ', graph.bfs( 1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print(graph.dfs(1, 6))
+    print('depth first search', graph.dfs(1, 6))
     print(graph.dfs_recursive(1, 6))
