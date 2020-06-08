@@ -83,7 +83,7 @@ class Graph:
         """
         # pass
         # visited = set()
-        all_things = ""
+        all_things = []
 
         def dft_recursive_inner(starting_point, visited):
         
@@ -119,19 +119,28 @@ class Graph:
         q.enqueue(starting_vertex)
         visited = set()
         routes = {}
+        best_route = []
         while q.size() > 0:
             v = q.dequeue()
             
             if v not in visited:
                 if v == destination_vertex:
-                    return routes
+                    # return routes
+                    cur = destination_vertex
+                    while cur != starting_vertex:
+                        for v in visited:
+                            if cur in routes[v]:
+                                best_route.insert(0, v)
+                                cur = v
+                    best_route.append(destination_vertex)
+                    return best_route
                 visited.add(v)
-                print(v)
                 neighbors = set()
                 for next_vert in self.get_neighbors(v):
                     q.enqueue(next_vert)
                     neighbors.add(next_vert)
                 routes[v] = neighbors
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
