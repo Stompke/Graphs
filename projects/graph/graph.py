@@ -166,11 +166,15 @@ class Graph:
                 if v == destination_vertex:
                     # return routes
                     cur = destination_vertex
+                    print(routes)
+                    print(visited)
                     while cur != starting_vertex:
+                        # print(cur)
                         for v in visited:
                             if cur in routes[v]:
                                 best_route.insert(0, v)
                                 cur = v
+                                break
                     best_route.append(destination_vertex)
                     return best_route
                 visited.add(v)
@@ -261,5 +265,5 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print('depth first search', graph.dfs(1, 6))
+    print('dfs', graph.dfs(1, 6))
     print(graph.dfs_recursive(1, 6))
