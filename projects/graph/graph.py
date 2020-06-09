@@ -74,23 +74,29 @@ class Graph:
 
 
 
-    def dft_recursive(self, starting_vertex, path_so_far = [], visited = set(), all_paths = []):
+    def dft_recursive(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        if starting_vertex in visited or self.get_neighbors(starting_vertex) == set():
-            all_paths.append(path_so_far)
-            return None
-        
-        visited.add(starting_vertex)
-        path_so_far.append(starting_vertex)
-        print(starting_vertex)
-        # print(path_so_far)
-        for neighbor in self.get_neighbors(starting_vertex):
-            self.dft_recursive(neighbor, path_so_far, visited)
+
+        def dft_recursive_inner(starting_point, path_so_far = [], visited = set(), all_paths = [] ):
+
+
+            if starting_point in visited or self.get_neighbors(starting_point) == set():
+                all_paths.append(path_so_far)
+                return None
+            
+            visited.add(starting_point)
+            path_so_far.append(starting_point)
+            print(starting_point)
+            # print(path_so_far)
+            for neighbor in self.get_neighbors(starting_point):
+                dft_recursive_inner(neighbor, path_so_far, visited)
+
+        return dft_recursive_inner(starting_vertex)
 
         # TEST
 
