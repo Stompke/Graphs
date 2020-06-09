@@ -74,40 +74,46 @@ class Graph:
 
 
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, path_so_far = [], visited = set(), all_paths = []):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        # pass
-        # visited = set()
-        all_things = []
-
-        def dft_recursive_inner(starting_point, visited):
+        if starting_vertex in visited or self.get_neighbors(starting_vertex) == set():
+            all_paths.append(path_so_far)
+            return None
         
-            if starting_point in visited:
-                print('1st', visited)
-                print('1st', starting_point)
-                return starting_point
-            
-            if self.get_neighbors(starting_point) == set():
-                print('2nd', visited)
-                print('2nd', starting_point)
-                visited.add(starting_point)
-                return starting_point
-            
-            for neighbor in self.get_neighbors(starting_point):
-                visited.add(starting_point)
-                print('3rd', visited)
-                print('3rd', starting_point)
-                print('neighbor', neighbor)
-                # all_things.append(visited)
-                return dft_recursive_inner(neighbor, visited)
+        visited.add(starting_vertex)
+        path_so_far.append(starting_vertex)
+        print(starting_vertex)
+        # print(path_so_far)
+        for neighbor in self.get_neighbors(starting_vertex):
+            self.dft_recursive(neighbor, path_so_far, visited)
 
-        return dft_recursive_inner(starting_vertex, set())
+        # TEST
+
+        # all_paths = []
+        # def dft_recursive_inner(starting_point, path_so_far = set(), visited = set()):
         
+        #     if starting_point in visited:
+        #         all_paths.append(path_so_far)
+        #         return None
+
+        #     path_so_far.add(starting_point)
+        #     print(path_so_far)
+        #     if self.get_neighbors(starting_point) == set():
+        #         print('hit here')
+        #         visited.add(starting_point)
+        #         all_paths.append(path_so_far)
+            
+        #     for neighbor in self.get_neighbors(starting_point):
+        #         visited.add(starting_point)
+        #         dft_recursive_inner(neighbor,  path_so_far ,visited)
+
+        # dft_recursive_inner(starting_vertex)
+        # return all_paths
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -148,7 +154,31 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        s = Stack()
+        s.push(starting_vertex)
+        visited = set()
+        routes = {}
+        best_route = []
+        while s.size() > 0:
+            v = s.pop()
+            
+            if v not in visited:
+                if v == destination_vertex:
+                    # return routes
+                    cur = destination_vertex
+                    while cur != starting_vertex:
+                        for v in visited:
+                            if cur in routes[v]:
+                                best_route.insert(0, v)
+                                cur = v
+                    best_route.append(destination_vertex)
+                    return best_route
+                visited.add(v)
+                neighbors = set()
+                for next_vert in self.get_neighbors(v):
+                    s.push(next_vert)
+                    neighbors.add(next_vert)
+                routes[v] = neighbors
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -189,9 +219,9 @@ if __name__ == '__main__':
     '''
     print(graph.vertices)
     graph.add_vertex(222)
-    print(graph.get_neighbors(222))
+    print('get neighbors', graph.get_neighbors(222))
     if(graph.get_neighbors(222) == set()):
-        print('it is equal YO')
+        print('it is esual YO')
 
     '''
     Valid BFT paths:
@@ -218,7 +248,7 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     graph.dft(1)
-    print('dft_recursive', graph.dft_recursive(1))
+    print('dft_recursive: ', graph.dft_recursive(1))
 
     '''
     Valid BFS path:
