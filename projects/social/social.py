@@ -92,14 +92,17 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    my_num = 20
-    sg.populate_graph(my_num, 2)
+    num_of_users = 100
+    sg.populate_graph(num_of_users, 2)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+
+    # check average connections
     friends = 0
-    for i in range(my_num):
+    for i in range(num_of_users):
         if i in sg.friendships:
             friends += (len(sg.friendships[i]))
-    
-    print(friends/my_num)
+    print('Average connections :', friends/num_of_users)
+
+    print(sg.friendships[44])
