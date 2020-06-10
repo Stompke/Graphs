@@ -15,9 +15,9 @@ def earliest_ancestor(ancestors, starting_node):
         g.add_edge(pair[1], pair[0])
 
     # get neighbors gets the parents
-    print( g.get_neighbors(6))
-    print( g.get_neighbors(11))
-
+    is_orphan = g.get_neighbors(starting_node)
+    if len(is_orphan) == 0:
+        return -1
     s = Stack()
     all_paths = []
     s.push([starting_node])
@@ -32,7 +32,19 @@ def earliest_ancestor(ancestors, starting_node):
                 s.push(path_copy)
         else:
             all_paths.append(path)
-    return all_paths
+    print(all_paths)
+    longest = all_paths[0]
+    for stored_path in all_paths:
+        if len(stored_path) > len(longest):
+            longest = stored_path
+        if len(stored_path) == len(longest):
+            if stored_path[-1] < longest[-1]:
+                longest = stored_path
+
+    return longest[-1]
+
+
+
             
             
 
