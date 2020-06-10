@@ -51,16 +51,29 @@ class SocialGraph:
             self.add_user(i)
 
         # Create friendships
-        friendship_cache = {}
+        friendship_cache = set()
         for user in self.users:
             for friend in self.users:
                 if friend is not user:
                     if (user, friend) not in friendship_cache and (friend, user) not in friendship_cache:
                         # self.add_friendship(user, friend)
-                        friendship_cache[(user, friend)] = True
+                        # friendship_cache[(user, friend)] = True
+                        friendship_cache.add((user, friend))
+        all_possible_friendships = list(friendship_cache)
 
+        random.shuffle(all_possible_friendships)
 
-        print('friendship_cache: ', friendship_cache)
+        filtered_friendships = []
+
+        for i in range(len(all_possible_friendships)//((num_users-2)//avg_friendships)):
+            filtered_friendships.append(all_possible_friendships[i])
+
+        print('friendship_cache: ', filtered_friendships)
+        
+        for friendship in filtered_friendships:
+            self.add_friendship(friendship[0], friendship[1])
+        # for friendship in all_possible_friendships:
+        #     self.add_friendship(friendship[0], friendship[1])
                     
 
     def get_all_social_paths(self, user_id):
@@ -79,7 +92,14 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    my_num = 20
+    sg.populate_graph(my_num, 2)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+    friends = 0
+    for i in range(my_num):
+        if i in sg.friendships:
+            friends += (len(sg.friendships[i]))
+    
+    print(friends/my_num)
