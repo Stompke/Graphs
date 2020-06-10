@@ -1,3 +1,5 @@
+import random
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -45,8 +47,21 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(num_users):
+            self.add_user(i)
 
         # Create friendships
+        friendship_cache = {}
+        for user in self.users:
+            for friend in self.users:
+                if friend is not user:
+                    if (user, friend) not in friendship_cache and (friend, user) not in friendship_cache:
+                        # self.add_friendship(user, friend)
+                        friendship_cache[(user, friend)] = True
+
+
+        print('friendship_cache: ', friendship_cache)
+                    
 
     def get_all_social_paths(self, user_id):
         """
