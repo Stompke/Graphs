@@ -1,4 +1,38 @@
 import random
+from util import Queue
+
+
+def bfs(self, starting_vertex, destination_vertex):
+        """
+        Return a list containing the shortest path from
+        starting_vertex to destination_vertex in
+        breath-first order.
+        """
+        q = Queue()
+        q.enqueue(starting_vertex)
+        visited = set()
+        routes = {}
+        best_route = []
+        while q.size() > 0:
+            v = q.dequeue()
+            
+            if v not in visited:
+                if v == destination_vertex:
+                    # return routes
+                    cur = destination_vertex
+                    while cur != starting_vertex:
+                        for v in visited:
+                            if cur in routes[v]:
+                                best_route.insert(0, v)
+                                cur = v
+                    best_route.append(destination_vertex)
+                    return best_route
+                visited.add(v)
+                neighbors = set()
+                for next_vert in self.get_neighbors(v):
+                    q.enqueue(next_vert)
+                    neighbors.add(next_vert)
+                routes[v] = neighbors
 
 class User:
     def __init__(self, name):
@@ -87,16 +121,35 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        q = Queue()
+        q.enqueue([user_id])
+        routes = {}
+        
+        while q.size() > 0:
+            cur_path = q.dequeue()
+            cur_friend = cur_path[-1]
+
+            if cur_friend not in visited:
+                visited[cur_friend] = cur_path
+                # Enqueue all 1 more entended friends lists
+                neighbors = self.friendships[cur_friend]
+                path_copy = cur_path
+                for neighbor in neighbors:
+                    path_copy.append(neighbor)
+                    q.enqueue(path_copy)
+
+
+
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    num_of_users = 100
+    num_of_users = 10
     sg.populate_graph(num_of_users, 2)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
-    print(connections)
+    print('connections :', connections)
 
     # check average connections
     friends = 0
@@ -105,4 +158,6 @@ if __name__ == '__main__':
             friends += (len(sg.friendships[i]))
     print('Average connections :', friends/num_of_users)
 
-    print(sg.friendships[44])
+    print(sg.friendships[1])
+    
+    print('Get all social paths :', sg.get_all_social_paths(1))
