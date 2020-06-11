@@ -94,6 +94,7 @@ class SocialGraph:
                         # friendship_cache[(user, friend)] = True
                         friendship_cache.add((user, friend))
         all_possible_friendships = list(friendship_cache)
+        print('lenght of all_possible_friendships: ', len(all_possible_friendships))
 
         random.shuffle(all_possible_friendships)
 
@@ -103,6 +104,7 @@ class SocialGraph:
             filtered_friendships.append(all_possible_friendships[i])
 
         print('friendship_cache: ', filtered_friendships)
+        print('length of filtered friendships: ', len(filtered_friendships))
         
         for friendship in filtered_friendships:
             self.add_friendship(friendship[0], friendship[1])
@@ -123,20 +125,26 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
         q = Queue()
         q.enqueue([user_id])
-        routes = {}
         
         while q.size() > 0:
+            # print('queue: ', q.queue)
             cur_path = q.dequeue()
+            # print('cur_path', cur_path)
             cur_friend = cur_path[-1]
+            # print('cur_friend', cur_friend)
 
             if cur_friend not in visited:
                 visited[cur_friend] = cur_path
                 # Enqueue all 1 more entended friends lists
                 neighbors = self.friendships[cur_friend]
-                path_copy = cur_path
+                # print('\n neighbors: ', neighbors)
                 for neighbor in neighbors:
-                    path_copy.append(neighbor)
-                    q.enqueue(path_copy)
+                    if neighbor not in visited:
+                        path_copy = list(cur_path)
+                        path_copy.append(neighbor)
+                        q.enqueue(path_copy)
+                        # print('\tenqueue this: ', q.queue)
+            # print('\n')
 
 
 
@@ -145,8 +153,8 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    num_of_users = 10
-    sg.populate_graph(num_of_users, 2)
+    num_of_users = 100
+    sg.populate_graph(num_of_users, 10)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print('connections :', connections)
@@ -159,5 +167,3 @@ if __name__ == '__main__':
     print('Average connections :', friends/num_of_users)
 
     print(sg.friendships[1])
-    
-    print('Get all social paths :', sg.get_all_social_paths(1))
